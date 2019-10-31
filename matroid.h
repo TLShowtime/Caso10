@@ -21,8 +21,8 @@ typedef struct
 void analizarMatroids(Matroid matroids[],size_t length){
 	
 	for (int matroidNumber = 0; matroidNumber < length;matroidNumber++){
+		#pragma omp parallel for
 		for (int i = 0; i < matroids[matroidNumber].S->len ; ++i){
-			
 			if (matroids[matroidNumber].funcion((qvec_at(matroids[matroidNumber].S,i) ) ) == 1 ){
 				qvec_push(matroids[matroidNumber].I,qvec_at(matroids[matroidNumber].S,i));
 			}
@@ -38,6 +38,7 @@ qvec(int,3)* interseccionIs(Matroid matroids[],size_t length){
 	memset(interseccion,0,MAX_LENGTH*sizeof(int));
 
 	for (int matroidNumber = 0; matroidNumber < length;matroidNumber++){
+		#pragma omp parallel for
 		for (int i = 0; i < matroids[matroidNumber].I->len ; ++i){
 			int numFound = qvec_at(matroids[matroidNumber].I,i);
 			interseccion[numFound]++;
@@ -46,6 +47,7 @@ qvec(int,3)* interseccionIs(Matroid matroids[],size_t length){
 
 	size_t size = sizeof(interseccion)/sizeof(interseccion[0]);
 
+	#pragma omp parallel for
 	for (size_t i = 0;i<= size;i++){
 		if (interseccion[i] == length){
 			qvec_push(respuesta,i);
